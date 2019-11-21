@@ -55,12 +55,14 @@ class LocalGtpBot:
 # tag::play_local_commands[]
     def send_command(self, cmd):
         self.gtp_stream.stdin.write(cmd.encode('utf-8'))
+        self.gtp_stream.stdin.flush()
 
     def get_response(self):
         succeeded = False
         result = ''
         while not succeeded:
-            line = self.gtp_stream.stdout.readline()
+            line = self.gtp_stream.stdout.readline().decode('utf-8')
+            self.gtp_stream.stdout.flush()
             if line[0] == '=':
                 succeeded = True
                 line = line.strip()
